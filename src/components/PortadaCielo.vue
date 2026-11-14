@@ -27,9 +27,6 @@
       <div class="capa-nube media" aria-hidden="true"><div class="deriva lenta"><Ilustracion nombre="nube-1" /></div></div>
       <div class="capa-nube cerca" aria-hidden="true"><div class="deriva"><Ilustracion nombre="nube-1" /></div></div>
 
-      <!-- la paloma cruza el cielo despacio, detrás de los textos -->
-      <div class="paloma-vuelo" aria-hidden="true"><div class="aleteo"><Ilustracion nombre="paloma" :perezosa="false" /></div></div>
-
       <!-- arco dorado de línea fina que enmarca la portada, con estrellitas que titilan -->
       <svg class="arco-dorado" viewBox="0 0 400 800" preserveAspectRatio="none" aria-hidden="true">
         <path d="M22 790V190C22 92 102 34 200 34s178 58 178 156v600" vector-effect="non-scaling-stroke" />
@@ -190,46 +187,6 @@ usarProgresoPista(pistaRef);
 @keyframes deriva {
   to {
     transform: translateX(8%);
-  }
-}
-
-/* PALOMA: cruza el cielo de un lado a otro (en un elemento) y ondula (en otro) */
-.paloma-vuelo {
-  position: absolute;
-  top: 1.5%;
-  left: 0;
-  z-index: 2;
-  width: 18%;
-  max-width: 90px;
-  animation: cruzar 16s linear 2.4s infinite;
-  opacity: 0;
-}
-
-.aleteo {
-  animation: ondular 2.2s ease-in-out infinite alternate;
-}
-
-@keyframes cruzar {
-  0% {
-    opacity: 0;
-    transform: translateX(-30vw);
-  }
-  8% {
-    opacity: 1;
-  }
-  70% {
-    opacity: 1;
-  }
-  80%,
-  100% {
-    opacity: 0;
-    transform: translateX(min(110vw, 520px));
-  }
-}
-
-@keyframes ondular {
-  to {
-    transform: translateY(-14px) rotate(-5deg);
   }
 }
 
