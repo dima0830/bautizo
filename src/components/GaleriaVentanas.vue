@@ -33,9 +33,38 @@
     <!-- foto en grande: va directo en <body> para quedar encima de toda la tarjeta -->
     <Teleport to="body">
     <Transition name="grande">
-      <div v-if="abierta !== null" class="visor" role="dialog" aria-modal="true" :aria-label="`Foto ${abierta + 1} de ${datos.nombre}`" @click.self="abierta = null">
-        <img :src="fotos[abierta]" :alt="`Foto ${abierta + 1} de ${datos.nombre}`" />
-        <button type="button" class="cerrar" aria-label="Cerrar foto" @click="abierta = null">
+      <div v-if="abierta !== null" class="visor" role="dialog" aria-modal="true" :aria-label="`Fotos de ${datos.nombre}`">
+        <!-- carrusel: todas las fotos en fila; se pasa deslizando, con las flechas o el teclado -->
+        <div ref="carruselRef" class="carrusel" @scroll.passive="alDeslizar">
+          <figure v-for="(foto, i) in fotos" :key="foto" class="diapositiva" @click.self="abierta = null">
+            <img :src="foto" :alt="`Foto ${i + 1} de ${datos.nombre}`" :loading="Math.abs(i - abierta) <= 1 ? 'eager' : 'lazy'" />
+          </figure>
+        </div>
+
+        <button type="button" class="flecha anterior" aria-label="Foto anterior" :disabled="abierta === 0" @click="ir(abierta - 1)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6" /></svg>
+        </button>
+        <button type="button" class="flecha siguiente" aria-label="Foto siguiente" :disabled="abierta === fotos.length - 1" @click="ir(abierta + 1)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
+        </button>
+
+        <div class="pie-visor">
+          <p class="contador" aria-live="polite">{{ abierta + 1 }} / {{ fotos.length }}</p>
+          <div class="puntos">
+            <button
+              v-for="(_, i) in fotos"
+              :key="i"
+              type="button"
+              class="punto"
+              :class="{ activo: i === abierta }"
+              :aria-label="`Ver foto ${i + 1}`"
+              :aria-current="i === abierta ? 'true' : undefined"
+              @click="ir(i)"
+            ></button>
+          </div>
+        </div>
+
+        <button type="button" class="cerrar" aria-label="Cerrar fotos" @click="abierta = null">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
         </button>
       </div>
@@ -45,7 +74,7 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, ref, watch } from "vue";
+import { nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { datos } from "@/datos";
 import { fotosGaleria } from "@/imagenes";
 const fotos = fotosGaleria;
@@ -53,10 +82,38 @@ const seccionRef = ref<HTMLElement | null>(null);
 const filaRef = ref<HTMLElement | null>(null);
 const abierta = ref<number | null>(null);
 
-/* mientras la foto está abierta, la página de atrás no se mueve */
-watch(abierta, (v) => {
+const carruselRef = ref<HTMLElement | null>(null);
+
+/* mientras la foto está abierta, la página de atrás no se mueve; al abrir, el carrusel empieza en la foto tocada */
+watch(abierta, async (v, antes) => {
   document.body.style.overflow = v === null ? "" : "hidden";
+  if (v !== null && antes === null) {
+    await nextTick();
+    const c = carruselRef.value;
+    if (c) c.scrollLeft = v * c.clientWidth;
+  }
 });
+
+/* ir a una foto del carrusel (con desplazamiento suave) */
+function ir(i: number) {
+  const c = carruselRef.value;
+  if (!c || i < 0 || i >= fotos.length) return;
+  c.scrollTo({ left: i * c.clientWidth, behavior: "smooth" });
+}
+
+/* al deslizar con el dedo, la foto que queda al centro pasa a ser la actual */
+let deslizando = false;
+function alDeslizar() {
+  if (deslizando) return;
+  deslizando = true;
+  requestAnimationFrame(() => {
+    deslizando = false;
+    const c = carruselRef.value;
+    if (!c || abierta.value === null) return;
+    const i = Math.round(c.scrollLeft / c.clientWidth);
+    if (i !== abierta.value && i >= 0 && i < fotos.length) abierta.value = i;
+  });
+}
 
 /*
   La fila se desliza hacia la izquierda lo que sobra de ancho según cuánto ha
@@ -86,7 +143,10 @@ function programar() {
 }
 
 function alTeclado(e: KeyboardEvent) {
+  if (abierta.value === null) return;
   if (e.key === "Escape") abierta.value = null;
+  else if (e.key === "ArrowRight") ir(abierta.value + 1);
+  else if (e.key === "ArrowLeft") ir(abierta.value - 1);
 }
 
 onMounted(() => {
@@ -212,24 +272,128 @@ onBeforeUnmount(() => {
   position: fixed;
   inset: 0;
   z-index: 90;
-  display: grid;
-  place-items: center;
-  padding: 24px;
   /* casi opaco y difuminado: no se distingue la tarjeta de atrás */
   background: rgba(46, 54, 38, 0.94);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
 }
 
-.visor img {
+/* CARRUSEL: fila de diapositivas a pantalla completa que encajan al deslizar */
+.carrusel {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+}
+
+.carrusel::-webkit-scrollbar {
+  display: none;
+}
+
+.diapositiva {
+  display: grid;
+  place-items: center;
+  flex: 0 0 100%;
+  height: 100%;
+  margin: 0;
+  padding: 72px 16px 96px;
+  scroll-snap-align: center;
+  scroll-snap-stop: always;
+}
+
+.diapositiva img {
   max-width: 100%;
-  max-height: 86vh;
+  max-height: 100%;
   border-radius: 22px;
+  object-fit: contain;
   box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.5);
+}
+
+/* flechas a los lados (en celular también se puede deslizar con el dedo) */
+.flecha {
+  position: absolute;
+  top: 50%;
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  margin-top: -23px;
+  border: 1px solid rgba(230, 211, 163, 0.6);
+  border-radius: 50%;
+  background: rgba(252, 250, 245, 0.92);
+  color: var(--verde);
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.flecha svg {
+  width: 22px;
+  height: 22px;
+}
+
+.flecha:disabled {
+  opacity: 0.25;
+  cursor: default;
+}
+
+.anterior {
+  left: 12px;
+}
+
+.siguiente {
+  right: 12px;
+}
+
+/* contador y puntitos abajo */
+.pie-visor {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 22px;
+  text-align: center;
+  pointer-events: none;
+}
+
+.contador {
+  margin: 0 0 10px;
+  font-family: var(--fuente-titulo);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 3px;
+  color: var(--oro-claro);
+}
+
+.puntos {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  pointer-events: auto;
+}
+
+.punto {
+  width: 9px;
+  height: 9px;
+  padding: 0;
+  border: 1px solid var(--oro-claro);
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  transition: background-color 0.2s ease, width 0.25s ease;
+}
+
+.punto.activo {
+  width: 22px;
+  border-radius: 999px;
+  background: var(--oro-claro);
 }
 
 .cerrar {
   position: absolute;
+  z-index: 1;
   top: 16px;
   right: 16px;
   display: grid;

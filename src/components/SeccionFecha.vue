@@ -12,7 +12,7 @@
       <IconoLaurel icono="calendario" />
       <p class="antetitulo">Acompáñame el</p>
       <p class="dia-semana">{{ fechaPartes.diaSemana }}</p>
-      <div class="dia" v-paralaje>
+      <div class="dia">
         <span class="numero">{{ fechaPartes.dia }}</span>
       </div>
       <p class="mes">{{ fechaPartes.mes }} {{ fechaPartes.anio }}</p>
@@ -110,7 +110,7 @@ const calendario =
 }
 
 /* el número grande, con una mancha de agua detrás que va un poco más lenta */
-/* el número dentro de un medallón redondo: crema, aro dorado y puntada (va un poco más lento: paralaje) */
+/* el número dentro de un medallón redondo: crema, aro dorado y puntada (todo centrado y fijo) */
 .dia {
   position: relative;
   display: grid;
@@ -127,7 +127,7 @@ const calendario =
   left: 50%;
   top: 50%;
   border-radius: 50%;
-  transform: translate(-50%, calc(-50% + var(--c, 0) * -30px));
+  transform: translate(-50%, -50%);
 }
 
 .dia::before {
@@ -156,8 +156,9 @@ const calendario =
   font-size: 6.2rem;
   font-weight: 600;
   line-height: 1;
+  /* los números de Cinzel quedan un poco altos: se bajan para centrarlos en el círculo */
+  top: 0.06em;
   color: var(--verde);
-  transform: translateY(calc(var(--c, 0) * 16px));
 }
 
 .mes {
