@@ -7,8 +7,8 @@
   <section v-if="fotos.length" id="galeria" ref="pistaRef" class="galeria" :style="{ '--n': fotos.length }">
     <div class="escena">
       <div v-flotar class="cabecera">
-        <p class="antetitulo">Mis primeros días</p>
-        <h2 class="titulo">Un año de amor</h2>
+        <p class="antetitulo">Un regalo de Dios</p>
+        <h2 class="titulo">Mis momentos de luz</h2>
       </div>
 
       <div class="ventana-pista">
@@ -176,6 +176,8 @@ onBeforeUnmount(() => {
   height: 100%;
   border-radius: 50%;
   object-fit: cover;
+  /* en fotos verticales la cara suele estar arriba: el círculo toma esa parte */
+  object-position: 50% 22%;
   box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.2);
 }
 

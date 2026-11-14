@@ -94,17 +94,45 @@ const santiago = imagen("santiago-portada");
 const letras = [..."¡Me bautizo!"];
 
 const pistaRef = ref<HTMLElement | null>(null);
-usarProgresoPista(pistaRef);
+/*
+  El barco no va pegado al dedo: --pb sigue a --p con inercia (tarda ~1 s en
+  alcanzarlo), así entra navegando suave aunque se baje rápido.
+*/
+let objetivoBarco = 0;
+let barco = 0;
+let anterior = 0;
+let animando = false;
+const INERCIA = 1.0; // segundos aprox. para alcanzar su sitio
+
+function pasoBarco(ahora: number) {
+  const dt = Math.min(0.1, Math.max(0, (ahora - anterior) / 1000));
+  anterior = ahora;
+  barco += (objetivoBarco - barco) * (1 - Math.exp(-dt / (INERCIA / 3)));
+  if (Math.abs(objetivoBarco - barco) < 0.0005) barco = objetivoBarco;
+  pistaRef.value?.style.setProperty("--pb", barco.toFixed(4));
+  if (barco !== objetivoBarco) requestAnimationFrame(pasoBarco);
+  else animando = false;
+}
+
+usarProgresoPista(pistaRef, (p) => {
+  objetivoBarco = p;
+  if (!animando) {
+    animando = true;
+    anterior = performance.now();
+    requestAnimationFrame(pasoBarco);
+  }
+});
 </script>
 
 <style scoped>
-/* PISTA: 100svh de escena + 150svh de recorrido */
+/* PISTA: 100svh de escena + 200svh de recorrido */
 .pista {
   --p: 0;
   --pe: 0;
+  --pb: 0;
   position: relative;
-  height: 250vh;
-  height: 250svh;
+  height: 300vh;
+  height: 300svh;
 }
 
 .escena {
@@ -400,8 +428,9 @@ usarProgresoPista(pistaRef);
   bottom: 36%;
   z-index: 5;
   width: min(40%, 170px);
-  transform: translateX(calc(-50% - (1 - clamp(0, (var(--p) - 0.12) / 0.66, 1)) * 85vw));
-  opacity: calc(clamp(0, (var(--p) - 0.13) / 0.08, 1));
+  /* entra con --pb (con inercia) a lo largo de casi todo el recorrido */
+  transform: translateX(calc(-50% - (1 - clamp(0, (var(--pb) - 0.1) / 0.75, 1)) * min(80vw, 400px)));
+  opacity: calc(clamp(0, (var(--pb) - 0.1) / 0.1, 1));
 }
 
 .zarpamos {
