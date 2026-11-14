@@ -15,7 +15,7 @@ export const datos = {
   nombreCompleto: "Santiago Gómez",
 
   /* Fecha y hora de la ceremonia, con zona horaria (Colombia: -05:00) */
-  fecha: "2027-06-12T11:00:00-05:00",
+  fecha: "2026-12-08T11:00:00-05:00",
 
   /* Frase de la portada */
   frase: "Hoy recibo el agua que me hace hijo de Dios",
