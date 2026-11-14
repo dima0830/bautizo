@@ -62,7 +62,12 @@
         <div class="nube-banco b3"><div class="deriva lenta"><Ilustracion nombre="nube-1" :perezosa="false" /></div></div>
       </div>
 
-      <p class="frase-final">¡Ya se acerca mi gran día!</p>
+      <!-- final de la portada: bloque vertical que llena la parte alta -->
+      <div class="final-portada">
+        <AdornoCruz class="cruz-final" />
+        <p class="ya-se-acerca"><span>¡Ya se acerca</span><span>mi gran día!</span></p>
+        <p class="final-fecha">{{ fechaPartes.diaSemana }} · {{ fechaPartes.dia }} de {{ fechaPartes.mes }}</p>
+      </div>
 
       <a href="#fecha" class="desliza" aria-label="Desliza hacia abajo">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -321,8 +326,10 @@ usarProgresoPista(pistaRef);
   bottom: 14%;
   /* encima del banco de nubes */
   z-index: 5;
-  width: min(74%, 330px);
-  transform: translateX(-50%) translateY(calc(var(--pe) * -6vh)) scale(calc(1 - var(--pe) * 0.06));
+  /* también según la altura de la pantalla: en pantallas bajas no tapa la fecha */
+  width: min(74%, 330px, calc((100vh - 320px) * 0.5));
+  width: min(74%, 330px, calc((100svh - 320px) * 0.5));
+  transform: translateX(-50%) translateY(calc(var(--pe) * -9vh)) scale(calc(1 - var(--pe) * 0.12));
   transform-origin: 50% 100%;
 }
 
@@ -386,22 +393,43 @@ usarProgresoPista(pistaRef);
   width: 72%;
 }
 
-.frase-final {
+/* FINAL: cruz, frase en dos renglones grandes y la fecha, apilados en vertical */
+.final-portada {
   position: absolute;
   left: 0;
   right: 0;
-  top: 8%;
+  top: 6%;
   z-index: 6;
-  margin: 0;
-  padding: 0 24px;
-  font-family: var(--fuente-mano);
-  font-size: 2.2rem;
-  font-weight: 600;
-  line-height: 1.1;
+  padding: 0 32px;
   text-align: center;
+  opacity: calc(clamp(0, (var(--p) - 0.6) / 0.2, 1));
+  transform: translateY(calc((1 - clamp(0, (var(--p) - 0.6) / 0.2, 1)) * 24px));
+  pointer-events: none;
+}
+
+.cruz-final {
+  width: 96px;
+  margin-bottom: 4px;
+}
+
+.ya-se-acerca {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  font-family: var(--fuente-mano);
+  font-size: clamp(2.6rem, 13vw, 3.3rem);
+  line-height: 1.05;
   color: var(--verde);
-  opacity: calc(clamp(0, (var(--p) - 0.62) / 0.2, 1));
-  transform: translateY(calc((1 - clamp(0, (var(--p) - 0.62) / 0.2, 1)) * 20px));
+}
+
+.final-fecha {
+  margin: 10px 0 0;
+  font-family: var(--fuente-titulo);
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--oro);
 }
 
 /* flecha: se va apenas empiezas a bajar */

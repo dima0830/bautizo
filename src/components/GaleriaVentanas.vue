@@ -30,7 +30,8 @@
       <p class="ayuda">Toca una ventanita para ver la foto</p>
     </div>
 
-    <!-- foto en grande -->
+    <!-- foto en grande: va directo en <body> para quedar encima de toda la tarjeta -->
+    <Teleport to="body">
     <Transition name="grande">
       <div v-if="abierta !== null" class="visor" role="dialog" aria-modal="true" :aria-label="`Foto ${abierta + 1} de ${datos.nombre}`" @click.self="abierta = null">
         <img :src="fotos[abierta]" :alt="`Foto ${abierta + 1} de ${datos.nombre}`" />
@@ -39,17 +40,23 @@
         </button>
       </div>
     </Transition>
+    </Teleport>
   </section>
 </template>
 
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, ref } from "vue";
+import { onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { datos } from "@/datos";
 import { fotosGaleria } from "@/imagenes";
 const fotos = fotosGaleria;
 const seccionRef = ref<HTMLElement | null>(null);
 const filaRef = ref<HTMLElement | null>(null);
 const abierta = ref<number | null>(null);
+
+/* mientras la foto está abierta, la página de atrás no se mueve */
+watch(abierta, (v) => {
+  document.body.style.overflow = v === null ? "" : "hidden";
+});
 
 /*
   La fila se desliza hacia la izquierda lo que sobra de ancho según cuánto ha
@@ -90,6 +97,7 @@ onMounted(() => {
   mover();
 });
 onBeforeUnmount(() => {
+  document.body.style.overflow = "";
   window.removeEventListener("keydown", alTeclado);
   window.removeEventListener("resize", programar);
   window.removeEventListener("scroll", programar);
@@ -203,11 +211,14 @@ onBeforeUnmount(() => {
 .visor {
   position: fixed;
   inset: 0;
-  z-index: 60;
+  z-index: 90;
   display: grid;
   place-items: center;
   padding: 24px;
-  background: rgba(64, 74, 52, 0.82);
+  /* casi opaco y difuminado: no se distingue la tarjeta de atrás */
+  background: rgba(46, 54, 38, 0.94);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
 .visor img {
