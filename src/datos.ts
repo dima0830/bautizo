@@ -13,7 +13,6 @@ export const datos = {
 
   nombre: "Santiago",
   nombreCompleto: "Santiago Gómez",
-  edad: "1 añito",
 
   /* Fecha y hora de la ceremonia, con zona horaria (Colombia: -05:00) */
   fecha: "2027-06-12T11:00:00-05:00",

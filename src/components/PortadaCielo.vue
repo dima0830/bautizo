@@ -35,7 +35,6 @@
         <svg class="subrayado" viewBox="0 0 220 24" aria-hidden="true">
           <path d="M6 14c34-10 70-12 104-6s72 8 104-4" fill="none" stroke="#7cc2b0" stroke-width="5" stroke-linecap="round" filter="url(#acuarela)" />
         </svg>
-        <p class="edad">{{ datos.edad }}</p>
         <p class="fecha-corta">{{ fechaPartes.diaSemana }} · {{ fechaPartes.dia }} de {{ fechaPartes.mes }}</p>
       </div>
 
@@ -259,15 +258,6 @@ usarProgresoPista(pistaRef);
   }
 }
 
-.edad {
-  margin: 2px 0 0;
-  font-family: var(--fuente-mano);
-  font-size: 1.7rem;
-  font-weight: 500;
-  color: var(--agua-oscuro);
-  animation: aparecer 0.8s ease 1.6s both;
-}
-
 .fecha-corta {
   margin: 6px 0 0;
   font-family: var(--fuente-titulo);
@@ -276,7 +266,7 @@ usarProgresoPista(pistaRef);
   letter-spacing: 2px;
   text-transform: uppercase;
   color: var(--texto-suave);
-  animation: aparecer 0.8s ease 1.8s both;
+  animation: aparecer 0.8s ease 1.6s both;
 }
 
 /* SANTIAGO: abajo al centro; al bajar sube hacia el cielo y se desvanece mientras entra el barquito */
