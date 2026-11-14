@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Barquito de papel: verde con tema claro, menta con tema oscuro -->
+  <style>
+    .vela { fill: #2f6b5b; } .casco { fill: #7cc2b0; }
+    @media (prefers-color-scheme: dark) { .vela { fill: #bfe3d0; } .casco { fill: #7cc2b0; } }
+  </style>
+  <path class="vela" d="M33 8 33 40 12 40z"/>
+  <path class="vela" d="M36 16 36 40 52 40z" opacity=".75"/>
+  <path class="casco" d="M6 44h52l-8 12H14z"/>
+</svg>
