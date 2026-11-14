@@ -12,9 +12,9 @@
       <div v-else class="cielo-pintado" aria-hidden="true">
         <svg viewBox="0 0 400 800" preserveAspectRatio="xMidYMid slice">
           <g filter="url(#acuarela-suave)">
-            <ellipse cx="80" cy="140" rx="160" ry="90" fill="#bfe3d0" opacity=".55" />
-            <ellipse cx="340" cy="300" rx="150" ry="100" fill="#dff1f4" opacity=".9" />
-            <ellipse cx="160" cy="520" rx="200" ry="110" fill="#e3f3ea" opacity=".9" />
+            <ellipse cx="80" cy="140" rx="160" ry="90" fill="#d6dfc7" opacity=".55" />
+            <ellipse cx="340" cy="300" rx="150" ry="100" fill="#f4eee1" opacity=".9" />
+            <ellipse cx="160" cy="520" rx="200" ry="110" fill="#eef1e6" opacity=".9" />
           </g>
         </svg>
       </div>
@@ -30,15 +30,21 @@
       <!-- la paloma cruza el cielo despacio, detrás de los textos -->
       <div class="paloma-vuelo" aria-hidden="true"><div class="aleteo"><Ilustracion nombre="paloma" :perezosa="false" /></div></div>
 
+      <!-- arco dorado de línea fina que enmarca la portada, con estrellitas que titilan -->
+      <svg class="arco-dorado" viewBox="0 0 400 800" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M22 790V190C22 92 102 34 200 34s178 58 178 156v600" vector-effect="non-scaling-stroke" />
+        <path d="M32 790V192C32 100 108 46 200 46s168 54 168 146v598" vector-effect="non-scaling-stroke" class="fino" />
+      </svg>
+      <span v-for="e in estrellas" :key="e.id" class="estrella" :style="e.estilo" aria-hidden="true">✦</span>
+
       <!-- textos -->
       <div class="textos">
-        <p class="me-bautizo" aria-label="¡Me bautizo!">
-          <span v-for="(letra, i) in letras" :key="i" class="letra" :style="{ '--i': i }" aria-hidden="true">{{ letra === " " ? " " : letra }}</span>
+        <AdornoCruz class="cruz-portada" />
+        <p class="te-invito">Te invito a mi</p>
+        <p class="bautizo" aria-label="Bautizo">
+          <span v-for="(letra, i) in letras" :key="i" class="letra" :style="{ '--i': i }" aria-hidden="true">{{ letra }}</span>
         </p>
         <h1 class="nombre">{{ datos.nombre }}</h1>
-        <svg class="subrayado" viewBox="0 0 220 24" aria-hidden="true">
-          <path d="M6 14c34-10 70-12 104-6s72 8 104-4" fill="none" stroke="#7cc2b0" stroke-width="5" stroke-linecap="round" filter="url(#acuarela)" />
-        </svg>
         <p class="fecha-corta">{{ fechaPartes.diaSemana }} · {{ fechaPartes.dia }} de {{ fechaPartes.mes }}</p>
       </div>
 
@@ -77,10 +83,20 @@ import { imagen } from "@/imagenes";
 import { usarProgresoPista } from "@/progresoPista";
 import Ilustracion from "@/components/Ilustracion.vue";
 import Dibujo from "@/components/Dibujo.vue";
+import AdornoCruz from "@/components/AdornoCruz.vue";
 
 const cielo = imagen("cielo");
 const santiago = imagen("santiago-portada");
-const letras = [..."¡Me bautizo!"];
+const letras = [..."BAUTIZO"];
+
+/* estrellitas doradas dentro del arco */
+const estrellas = [
+  { x: 14, y: 22, t: 0.7 }, { x: 84, y: 18, t: 0.9 }, { x: 90, y: 40, t: 0.55 },
+  { x: 10, y: 46, t: 0.6 }, { x: 22, y: 9, t: 0.5 }, { x: 76, y: 6, t: 0.6 },
+].map((e, id) => ({
+  id,
+  estilo: { left: `${e.x}%`, top: `${e.y}%`, fontSize: `${e.t}rem`, animationDelay: `${-id * 0.9}s` },
+}));
 
 const pistaRef = ref<HTMLElement | null>(null);
 usarProgresoPista(pistaRef);
@@ -221,33 +237,85 @@ usarProgresoPista(pistaRef);
 .textos {
   position: relative;
   z-index: 3;
-  padding: 11vh 24px 0;
-  padding: 11svh 24px 0;
+  padding: 7vh 36px 0;
+  padding: 7svh 36px 0;
   text-align: center;
   transform: translateY(calc(var(--p) * -24vh));
   opacity: calc(1 - clamp(0, (var(--p) - 0.12) / 0.22, 1));
 }
 
-.me-bautizo {
-  margin: 0;
-  font-family: var(--fuente-mano);
-  font-size: 2.1rem;
-  font-weight: 600;
-  line-height: 1;
-  color: var(--agua-oscuro);
+/* ARCO DORADO */
+.arco-dorado {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: var(--oro);
+  stroke-width: 1.6;
+  opacity: calc(0.9 - clamp(0, (var(--p) - 0.1) / 0.3, 1) * 0.6);
+  pointer-events: none;
 }
 
-/* cada letra cae y rebota como una burbuja al abrir la página */
+.arco-dorado .fino {
+  stroke-width: 0.8;
+  opacity: 0.6;
+}
+
+.estrella {
+  position: absolute;
+  z-index: 3;
+  color: var(--oro);
+  line-height: 1;
+  animation: titilar 3.6s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes titilar {
+  50% {
+    opacity: 0.25;
+    transform: scale(0.7);
+  }
+}
+
+.cruz-portada {
+  width: 104px;
+  margin-bottom: 2px;
+}
+
+.te-invito {
+  margin: 0;
+  font-family: var(--fuente-texto);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 3.5px;
+  text-transform: uppercase;
+  color: var(--texto-suave);
+  animation: aparecer 0.8s ease 0.2s both;
+}
+
+/* BAUTIZO: mayúsculas doradas; cada letra cae y rebota al abrir la página */
+.bautizo {
+  margin: 4px 0 0;
+  font-family: var(--fuente-titulo);
+  font-size: clamp(2.5rem, 13vw, 3.3rem);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 4px;
+  color: var(--oro);
+}
+
 .letra {
   display: inline-block;
   animation: rebote 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) both;
-  animation-delay: calc(0.25s + var(--i) * 0.05s);
+  animation-delay: calc(0.35s + var(--i) * 0.07s);
 }
 
 @keyframes rebote {
   from {
     opacity: 0;
-    transform: translateY(-36px) scale(0.5);
+    transform: translateY(-30px) scale(0.6);
   }
   to {
     opacity: 1;
@@ -255,15 +323,16 @@ usarProgresoPista(pistaRef);
   }
 }
 
+/* el nombre en cursiva verde, como en la referencia */
 .nombre {
-  margin: 4px 0 0;
-  font-family: var(--fuente-titulo);
-  font-size: clamp(3.4rem, 17vw, 4.6rem);
-  font-weight: 600;
-  line-height: 1;
-  letter-spacing: 1px;
+  margin: 0;
+  padding: 0 0.15em;
+  font-family: var(--fuente-mano);
+  font-size: clamp(3.6rem, 19vw, 5rem);
+  font-weight: 400;
+  line-height: 1.15;
   color: var(--verde);
-  animation: aparecer 1s cubic-bezier(0.34, 1.56, 0.64, 1) 0.85s both;
+  animation: aparecer 1s cubic-bezier(0.34, 1.56, 0.64, 1) 0.95s both;
 }
 
 @keyframes aparecer {
@@ -274,25 +343,6 @@ usarProgresoPista(pistaRef);
   to {
     opacity: 1;
     transform: none;
-  }
-}
-
-/* subrayado que se pinta de izquierda a derecha */
-.subrayado {
-  display: block;
-  width: 190px;
-  margin: 2px auto 0;
-}
-
-.subrayado path {
-  stroke-dasharray: 240;
-  stroke-dashoffset: 240;
-  animation: pintar 1.1s ease-out 1.4s forwards;
-}
-
-@keyframes pintar {
-  to {
-    stroke-dashoffset: 0;
   }
 }
 
@@ -408,7 +458,7 @@ usarProgresoPista(pistaRef);
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background: rgba(252, 254, 253, 0.92);
+  background: rgba(252, 250, 245, 0.92);
   color: var(--verde);
   box-shadow: var(--sombra-suave);
   opacity: calc(1 - clamp(0, var(--p) / 0.08, 1));

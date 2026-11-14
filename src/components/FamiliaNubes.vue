@@ -4,7 +4,7 @@
     entrar en pantalla (por delante el rol, por detrás los nombres).
     Al tocarlas se vuelven a girar.
   -->
-  <section id="familia" class="seccion familia">
+  <section id="familia" class="seccion familia manchas">
     <div v-flotar class="cabecera">
       <AdornoCruz />
       <p class="antetitulo">Con el amor de</p>
@@ -81,10 +81,9 @@ onBeforeUnmount(() => {
 
 <style scoped>
 .familia {
-  background:
-    radial-gradient(ellipse 70% 40% at 20% 30%, rgba(191, 227, 208, 0.55), transparent 70%),
-    radial-gradient(ellipse 60% 40% at 85% 75%, rgba(223, 241, 244, 0.9), transparent 70%),
-    var(--blanco);
+  --manchas:
+    radial-gradient(ellipse 65% 30% at 18% 40%, rgba(214, 223, 199, 0.55), transparent 70%),
+    radial-gradient(ellipse 60% 30% at 86% 64%, rgba(244, 238, 225, 0.9), transparent 70%);
 }
 
 .cabecera {
@@ -146,7 +145,7 @@ onBeforeUnmount(() => {
   /* el fondo (::before) queda dentro de la cara y se oculta con ella al girar */
   isolation: isolate;
   /* contorno suave alrededor de toda la nube (círculos + base) */
-  filter: drop-shadow(0 0 1.5px rgba(79, 158, 139, 0.55)) drop-shadow(0 12px 14px rgba(34, 80, 63, 0.18));
+  filter: drop-shadow(0 0 1.5px rgba(111, 132, 96, 0.55)) drop-shadow(0 12px 14px rgba(64, 74, 52, 0.18));
 }
 
 .cara::before {
@@ -177,29 +176,34 @@ onBeforeUnmount(() => {
 
 .rol {
   font-family: var(--fuente-titulo);
-  font-size: 1.5rem;
+  font-size: 1.15rem;
   font-weight: 600;
+  letter-spacing: 2px;
+  color: var(--oro);
 }
 
 .toca {
-  font-family: var(--fuente-mano);
-  font-size: 1.1rem;
+  font-family: var(--fuente-texto);
+  font-size: 0.85rem;
+  font-style: italic;
   color: var(--agua-oscuro);
 }
 
 .rol-pequeno {
-  margin-top: 26px;
-  font-family: var(--fuente-mano);
-  font-size: 1.3rem;
+  margin-top: 30px;
+  font-family: var(--fuente-texto);
+  font-size: 0.7rem;
   font-weight: 600;
-  color: var(--agua-oscuro);
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--oro);
 }
 
 .persona {
-  font-family: var(--fuente-titulo);
-  font-size: 1.25rem;
-  font-weight: 500;
-  line-height: 1.25;
+  font-family: var(--fuente-mano);
+  font-size: 1.9rem;
+  line-height: 1.1;
+  color: var(--verde);
 }
 
 @media (prefers-reduced-motion: reduce) {

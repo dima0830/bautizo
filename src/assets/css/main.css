@@ -1,29 +1,35 @@
 /*
-  ESTILO "ACUARELA TIERNA": menta, agua y verde profundo sobre blanco.
+  ESTILO "SALVIA Y ORO": crema, verde salvia y detalles dorados finos, con
+  acuarela suave (antes "acuarela tierna" en menta).
   Reglas: en una misma regla no se mezcla transform con translate/scale/rotate
   (el minificador los junta), y solo se animan transformaciones y opacidad.
 */
 :root {
-  --menta: #bfe3d0;
-  --menta-claro: #e3f3ea;
-  --agua: #7cc2b0;
-  --agua-oscuro: #4f9e8b;
-  --verde: #2f6b5b;
-  --verde-oscuro: #22503f;
-  --blanco: #fcfefd;
-  --arena: #f3e3c3;
-  --cielo: #dff1f4;
-  --texto: #2c4a41;
-  --texto-suave: #5b776e;
-  --linea: #cfe6da;
+  --menta: #d6dfc7;
+  --menta-claro: #eef1e6;
+  --agua: #9fb08d;
+  --agua-oscuro: #6f8460;
+  --verde: #556b48;
+  --verde-oscuro: #3f4f35;
+  --blanco: #fcfaf5;
+  --arena: #e6d3a3;
+  --cielo: #f4eee1;
+  --texto: #4a5142;
+  --texto-suave: #7a7f6e;
+  --oro: #b08d4a;
+  --oro-claro: #e6d3a3;
+  --crema: #f8f3e8;
+  --linea: #e5dfd0;
 
-  --fuente-titulo: "Fredoka", "Nunito", system-ui, sans-serif;
-  --fuente-texto: "Nunito", system-ui, sans-serif;
-  --fuente-mano: "Caveat", "Fredoka", cursive;
+  /* Cinzel: mayúsculas clásicas para títulos; Lora: serif firme para leer;
+     Great Vibes: cursiva para el nombre y frases (la misma que gustó en la comunión) */
+  --fuente-titulo: "Cinzel", "Times New Roman", serif;
+  --fuente-texto: "Lora", Georgia, serif;
+  --fuente-mano: "Great Vibes", cursive;
 
   /* espacio arriba y abajo de cada sección */
   --espacio-seccion: 80px;
-  --sombra-suave: 0 18px 40px -24px rgba(34, 80, 63, 0.45);
+  --sombra-suave: 0 18px 40px -24px rgba(64, 74, 52, 0.45);
 }
 
 * {
@@ -37,7 +43,7 @@ html {
 body {
   margin: 0;
   min-height: 100vh;
-  background: var(--menta-claro);
+  background: var(--crema);
   color: var(--texto);
   font-family: var(--fuente-texto);
   font-size: 1rem;
@@ -66,8 +72,8 @@ img {
     border-radius: 28px;
     overflow: clip;
     box-shadow:
-      0 40px 80px -30px rgba(34, 80, 63, 0.4),
-      0 12px 30px -14px rgba(34, 80, 63, 0.25),
+      0 40px 80px -30px rgba(64, 74, 52, 0.4),
+      0 12px 30px -14px rgba(64, 74, 52, 0.25),
       0 0 0 1px rgba(255, 255, 255, 0.7);
   }
 }
@@ -80,21 +86,35 @@ img {
 }
 
 .antetitulo {
-  margin: 0 0 6px;
-  font-family: var(--fuente-mano);
-  font-size: 1.6rem;
+  margin: 0 0 8px;
+  font-family: var(--fuente-texto);
+  font-size: 0.78rem;
   font-weight: 600;
-  line-height: 1.1;
-  color: var(--agua-oscuro);
+  letter-spacing: 3px;
+  line-height: 1.4;
+  text-transform: uppercase;
+  color: var(--texto-suave);
 }
 
+/* títulos en mayúsculas clásicas doradas, con una filigrana debajo */
 .titulo {
-  margin: 0 0 8px;
+  margin: 0 0 10px;
   font-family: var(--fuente-titulo);
-  font-size: clamp(1.7rem, 7.5vw, 2.1rem);
+  font-size: clamp(1.45rem, 6.6vw, 1.85rem);
   font-weight: 600;
-  line-height: 1.15;
-  color: var(--verde);
+  line-height: 1.2;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--oro);
+}
+
+.titulo::after {
+  content: "";
+  display: block;
+  width: 150px;
+  height: 18px;
+  margin: 8px auto 0;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 18' fill='none' stroke='%23b08d4a' stroke-width='1.2' stroke-linecap='round'%3E%3Cpath d='M4 9h48M108 9h48'/%3E%3Cpath d='M56 9c6-6 10-6 14-2M104 9c-6-6-10-6-14-2' /%3E%3Cpath d='M60 9c4 4 7 4 10 1M100 9c-4 4-7 4-10 1'/%3E%3Cpath d='M80 14c-6-4-8-7-6-9a3 3 0 0 1 6 0 3 3 0 0 1 6 0c2 2 0 5-6 9z' fill='%23b08d4a' stroke='none'/%3E%3C/svg%3E") center / contain no-repeat;
 }
 
 .subtitulo {
@@ -111,18 +131,18 @@ img {
   justify-content: center;
   gap: 8px;
   min-height: 48px;
-  padding: 12px 26px;
+  padding: 12px 24px;
   border: 0;
   border-radius: 999px;
   background: var(--verde);
   color: #fff;
   font-family: var(--fuente-titulo);
-  font-size: 1.05rem;
-  font-weight: 500;
-  letter-spacing: 0.3px;
+  font-size: 0.86rem;
+  font-weight: 600;
+  letter-spacing: 1.5px;
   text-decoration: none;
   cursor: pointer;
-  box-shadow: 0 10px 22px -12px rgba(34, 80, 63, 0.7);
+  box-shadow: 0 10px 22px -12px rgba(64, 74, 52, 0.7);
   transition: background-color 0.2s ease, transform 0.15s ease;
   -webkit-tap-highlight-color: transparent;
 }
@@ -178,6 +198,29 @@ img {
 .flotar.visible > :nth-child(4) { transition-delay: 0.36s; }
 .flotar.visible > :nth-child(5) { transition-delay: 0.48s; }
 .flotar.visible > :nth-child(n + 6) { transition-delay: 0.6s; }
+
+/*
+  FONDOS SIN CORTES: las secciones no tienen fondo opaco. Sus manchas de
+  color (--manchas) van en un ::before más alto que la sección, que se sale
+  160px por arriba y por abajo y se desvanece sobre las vecinas: así el color
+  pasa de una sección a otra sin una línea.
+  Regla para --manchas: gradientes radiales con radio vertical ≤ 40% y que
+  terminen en transparente (no deben tocar el borde del ::before).
+*/
+.manchas {
+  position: relative;
+  isolation: isolate;
+  overflow-x: clip;
+}
+
+.manchas::before {
+  content: "";
+  position: absolute;
+  inset: -160px 0;
+  z-index: -1;
+  background: var(--manchas, none);
+  pointer-events: none;
+}
 
 /* texto solo para lectores de pantalla */
 .solo-lector {

@@ -1,6 +1,6 @@
 <template>
   <!-- CONFIRMACIÓN: botón que abre el formulario; al confirmar, lluvia de gotas y burbujas -->
-  <section id="confirmar" class="seccion confirmar">
+  <section id="confirmar" class="seccion confirmar manchas">
     <div v-flotar class="contenido">
       <Ilustracion nombre="concha" class="concha" />
       <p class="antetitulo">¿Me acompañas?</p>
@@ -153,10 +153,7 @@ function celebrar() {
 
 <style scoped>
 .confirmar {
-  overflow: hidden;
-  background:
-    radial-gradient(ellipse 80% 50% at 50% 100%, rgba(191, 227, 208, 0.6), transparent 70%),
-    var(--blanco);
+  --manchas: radial-gradient(ellipse 80% 30% at 50% 62%, rgba(214, 223, 199, 0.6), transparent 70%);
 }
 
 .contenido {
@@ -206,8 +203,8 @@ function celebrar() {
   border: 1.5px solid var(--menta);
   border-radius: 999px;
   font-family: var(--fuente-titulo);
-  font-size: 1.05rem;
-  font-weight: 500;
+  font-size: 0.88rem;
+  font-weight: 600;
   color: var(--verde);
   cursor: pointer;
   transition: background-color 0.2s ease, color 0.2s ease;
@@ -263,7 +260,7 @@ function celebrar() {
 .campo input:focus {
   outline: none;
   border-color: var(--agua);
-  box-shadow: 0 0 0 3px rgba(124, 194, 176, 0.25);
+  box-shadow: 0 0 0 3px rgba(159, 176, 141, 0.25);
 }
 
 .pases-campo {
@@ -321,6 +318,7 @@ function celebrar() {
 .lluvia {
   position: absolute;
   inset: 0;
+  overflow: hidden;
   pointer-events: none;
 }
 
@@ -345,7 +343,7 @@ function celebrar() {
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  border: 2px solid rgba(124, 194, 176, 0.8);
+  border: 2px solid rgba(159, 176, 141, 0.8);
   background: rgba(255, 255, 255, 0.6);
   animation-name: subir;
 }

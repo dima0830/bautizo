@@ -3,7 +3,7 @@
     VERSÍCULO: la paloma baja volando mientras la frase se escribe palabra por
     palabra al bajar (las palabras se iluminan según el recorrido).
   -->
-  <section ref="seccionRef" class="seccion versiculo" v-paralaje>
+  <section ref="seccionRef" class="seccion versiculo manchas" v-paralaje>
     <div class="paloma" aria-hidden="true">
       <div class="aletea"><Ilustracion nombre="paloma" /></div>
     </div>
@@ -65,10 +65,7 @@ onBeforeUnmount(() => window.removeEventListener("scroll", programar));
 
 <style scoped>
 .versiculo {
-  overflow: hidden;
-  background:
-    radial-gradient(ellipse 70% 45% at 50% 40%, rgba(223, 241, 244, 0.95), transparent 70%),
-    var(--blanco);
+  --manchas: radial-gradient(ellipse 75% 34% at 50% 45%, rgba(244, 238, 225, 0.95), transparent 70%);
 }
 
 /* la paloma baja un poco más lenta que la página (paralaje) y aletea */
@@ -91,16 +88,17 @@ onBeforeUnmount(() => window.removeEventListener("scroll", programar));
 .cita {
   max-width: 330px;
   margin: 0 auto;
-  font-family: var(--fuente-titulo);
-  font-size: clamp(1.7rem, 7.6vw, 2.1rem);
+  font-family: var(--fuente-texto);
+  font-size: clamp(1.45rem, 6.4vw, 1.8rem);
+  font-style: italic;
   font-weight: 500;
-  line-height: 1.3;
+  line-height: 1.35;
 }
 
 .palabra {
   display: inline-block;
   margin-right: 0.24em;
-  color: #cfe3da;
+  color: #dcd8c9;
   transition: color 0.5s ease;
 }
 
@@ -110,8 +108,11 @@ onBeforeUnmount(() => window.removeEventListener("scroll", programar));
 
 .referencia {
   margin: 12px 0 18px;
-  font-family: var(--fuente-mano);
-  font-size: 1.4rem;
-  color: var(--agua-oscuro);
+  font-family: var(--fuente-texto);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--oro);
 }
 </style>

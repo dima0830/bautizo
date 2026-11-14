@@ -61,7 +61,7 @@ onBeforeUnmount(() => {
   place-items: center;
   padding: 18px;
   overflow-y: auto;
-  background: rgba(34, 80, 63, 0.55);
+  background: rgba(64, 74, 52, 0.55);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
 }
@@ -81,11 +81,12 @@ onBeforeUnmount(() => {
 .titulo-ventana {
   margin: 0 36px 16px;
   font-family: var(--fuente-titulo);
-  font-size: 1.6rem;
+  font-size: 1.25rem;
   font-weight: 600;
-  line-height: 1.2;
+  letter-spacing: 1px;
+  line-height: 1.3;
   text-align: center;
-  color: var(--verde);
+  color: var(--oro);
 }
 
 .cerrar {

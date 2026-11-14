@@ -19,3 +19,14 @@ export async function enviarFormulario(url: string, cuerpo: unknown): Promise<vo
   });
   if (!respuesta.ok) throw new Error(`El servidor respondió ${respuesta.status}`);
 }
+
+/* Igual, pero para subir archivos (fotos y videos) con FormData */
+export async function enviarArchivos(url: string, datosFormulario: FormData): Promise<void> {
+  if (datos.modoMuestra) {
+    await new Promise((listo) => setTimeout(listo, 1400));
+    return;
+  }
+
+  const respuesta = await fetch(url, { method: "POST", body: datosFormulario });
+  if (!respuesta.ok) throw new Error(`El servidor respondió ${respuesta.status}`);
+}

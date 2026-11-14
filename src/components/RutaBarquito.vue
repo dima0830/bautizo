@@ -6,7 +6,7 @@
     va, se inclina en las curvas y va pintando el río. Cada parada se ilumina
     cuando llega.
   -->
-  <section id="ruta" class="seccion ruta">
+  <section id="ruta" class="seccion ruta manchas">
     <div v-flotar class="cabecera">
       <p class="antetitulo">Mi gran día</p>
       <h2 class="titulo">La ruta del barquito</h2>
@@ -188,7 +188,9 @@ onBeforeUnmount(() => {
 
 <style scoped>
 .ruta {
-  overflow: hidden;
+  --manchas:
+    radial-gradient(ellipse 75% 22% at 70% 40%, rgba(244, 238, 225, 0.85), transparent 70%),
+    radial-gradient(ellipse 60% 18% at 20% 70%, rgba(214, 223, 199, 0.4), transparent 70%);
 }
 
 .cabecera {
@@ -220,7 +222,7 @@ onBeforeUnmount(() => {
 }
 
 .rio {
-  stroke: #dff1f4;
+  stroke: #f4eee1;
   stroke-width: 30;
 }
 
@@ -282,7 +284,7 @@ onBeforeUnmount(() => {
 .parada.llego {
   box-shadow:
     0 0 0 4px var(--menta),
-    0 0 0 10px rgba(191, 227, 208, 0.4),
+    0 0 0 10px rgba(214, 223, 199, 0.4),
     var(--sombra-suave);
   transform: scale(1.03);
 }

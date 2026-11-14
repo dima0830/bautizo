@@ -1,15 +1,15 @@
 <template>
   <!-- FECHA: el día grande pintado, la cuenta regresiva en burbujas y agendar -->
-  <section id="fecha" class="seccion fecha">
+  <section id="fecha" class="seccion fecha manchas">
     <svg class="mancha m1" viewBox="0 0 200 200" aria-hidden="true">
-      <ellipse cx="100" cy="100" rx="90" ry="70" fill="#bfe3d0" opacity=".55" filter="url(#acuarela-suave)" />
+      <ellipse cx="100" cy="100" rx="90" ry="70" fill="#d6dfc7" opacity=".55" filter="url(#acuarela-suave)" />
     </svg>
     <svg class="mancha m2" viewBox="0 0 200 200" aria-hidden="true">
-      <ellipse cx="100" cy="100" rx="80" ry="80" fill="#f3e3c3" opacity=".5" filter="url(#acuarela-suave)" />
+      <ellipse cx="100" cy="100" rx="80" ry="80" fill="#e6d3a3" opacity=".5" filter="url(#acuarela-suave)" />
     </svg>
 
     <div v-flotar class="contenido">
-      <AdornoCruz />
+      <IconoLaurel icono="calendario" />
       <p class="antetitulo">Acompáñame el</p>
       <p class="dia-semana">{{ fechaPartes.diaSemana }}</p>
       <div class="dia" v-paralaje>
@@ -38,7 +38,7 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import { datos, fechaPartes } from "@/datos";
-import AdornoCruz from "@/components/AdornoCruz.vue";
+import IconoLaurel from "@/components/IconoLaurel.vue";
 
 const objetivo = new Date(datos.fecha).getTime();
 const ahora = ref(Date.now());
@@ -71,8 +71,11 @@ const calendario =
 
 <style scoped>
 .fecha {
-  overflow: hidden;
-  background: linear-gradient(180deg, var(--menta-claro) 0%, var(--blanco) 40%);
+  /* arriba continúa el menta de la portada y se aclara; luego dos manchas suaves */
+  --manchas:
+    linear-gradient(180deg, transparent 0, var(--menta-claro) 160px, transparent 480px),
+    radial-gradient(ellipse 60% 26% at 12% 32%, rgba(214, 223, 199, 0.55), transparent 70%),
+    radial-gradient(ellipse 50% 24% at 92% 70%, rgba(230, 211, 163, 0.5), transparent 70%);
 }
 
 .mancha {
@@ -107,30 +110,50 @@ const calendario =
 }
 
 /* el número grande, con una mancha de agua detrás que va un poco más lenta */
+/* el número dentro de un medallón redondo: crema, aro dorado y puntada (va un poco más lento: paralaje) */
 .dia {
   position: relative;
   display: grid;
   place-items: center;
-  width: 200px;
+  width: 180px;
   height: 180px;
-  margin: 0 auto;
+  margin: 6px auto 4px;
+}
+
+.dia::before,
+.dia::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  border-radius: 50%;
+  transform: translate(-50%, calc(-50% + var(--c, 0) * -30px));
 }
 
 .dia::before {
-  content: "";
-  position: absolute;
-  inset: 10px 18px;
-  border-radius: 46% 54% 50% 50% / 55% 45% 55% 45%;
-  background: radial-gradient(circle at 35% 30%, #e3f3ea, var(--menta) 60%, var(--agua) 100%);
-  opacity: 0.7;
-  transform: translateY(calc(var(--c, 0) * -40px)) rotate(-6deg);
+  width: 168px;
+  height: 168px;
+  background: radial-gradient(circle at 50% 40%, var(--blanco), var(--crema) 70%, var(--menta-claro));
+  border: 1.5px solid var(--oro);
+  box-shadow:
+    0 0 0 6px var(--blanco),
+    0 0 0 7px var(--oro-claro),
+    0 18px 30px -18px rgba(64, 74, 52, 0.45);
+}
+
+.dia::after {
+  width: 146px;
+  height: 146px;
+  border: 1.2px dashed var(--oro);
+  opacity: 0.6;
 }
 
 .numero {
   position: relative;
   display: block;
   font-family: var(--fuente-titulo);
-  font-size: 7.5rem;
+  z-index: 1;
+  font-size: 6.2rem;
   font-weight: 600;
   line-height: 1;
   color: var(--verde);
@@ -162,10 +185,10 @@ const calendario =
   border-radius: 50%;
   background:
     radial-gradient(circle at 30% 28%, rgba(255, 255, 255, 0.95) 0 10%, transparent 11%),
-    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.55), rgba(191, 227, 208, 0.75) 70%, rgba(124, 194, 176, 0.85));
+    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.55), rgba(214, 223, 199, 0.75) 70%, rgba(159, 176, 141, 0.85));
   box-shadow:
-    inset 0 -6px 12px rgba(79, 158, 139, 0.25),
-    0 10px 18px -12px rgba(34, 80, 63, 0.5);
+    inset 0 -6px 12px rgba(111, 132, 96, 0.25),
+    0 10px 18px -12px rgba(64, 74, 52, 0.5);
   animation: burbujear 3.6s ease-in-out infinite alternate;
   animation-delay: calc(var(--i) * -0.9s);
 }

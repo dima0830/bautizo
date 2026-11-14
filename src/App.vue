@@ -6,10 +6,10 @@
     <img v-if="fondo" :src="fondo" alt="" class="fondo-img" />
     <svg v-else class="fondo-pintado" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
       <g filter="url(#acuarela-suave)">
-        <ellipse cx="200" cy="200" rx="420" ry="260" fill="#bfe3d0" opacity=".7" />
-        <ellipse cx="1400" cy="700" rx="460" ry="280" fill="#bfe3d0" opacity=".6" />
-        <ellipse cx="1350" cy="150" rx="360" ry="200" fill="#dff1f4" />
-        <ellipse cx="250" cy="760" rx="380" ry="220" fill="#dff1f4" />
+        <ellipse cx="200" cy="200" rx="420" ry="260" fill="#d6dfc7" opacity=".7" />
+        <ellipse cx="1400" cy="700" rx="460" ry="280" fill="#d6dfc7" opacity=".6" />
+        <ellipse cx="1350" cy="150" rx="360" ry="200" fill="#f4eee1" />
+        <ellipse cx="250" cy="760" rx="380" ry="220" fill="#f4eee1" />
       </g>
     </svg>
     <div class="nube-lado n1"><Ilustracion nombre="nube-1" /></div>
@@ -24,6 +24,7 @@
     <FamiliaNubes />
     <VersiculoPaloma />
     <GaleriaVentanas />
+    <CompartirFotos />
     <ConfirmacionAsistencia />
     <CierreBurbujas />
     <MusicaBarquito />
@@ -40,6 +41,7 @@ import RutaBarquito from "@/components/RutaBarquito.vue";
 import FamiliaNubes from "@/components/FamiliaNubes.vue";
 import VersiculoPaloma from "@/components/VersiculoPaloma.vue";
 import GaleriaVentanas from "@/components/GaleriaVentanas.vue";
+import CompartirFotos from "@/components/CompartirFotos.vue";
 import ConfirmacionAsistencia from "@/components/ConfirmacionAsistencia.vue";
 import CierreBurbujas from "@/components/CierreBurbujas.vue";
 import MusicaBarquito from "@/components/MusicaBarquito.vue";
@@ -65,6 +67,11 @@ const fondo = imagen("fondo-escritorio");
 
   .tarjeta {
     z-index: 1;
+  }
+
+  /* la acuarela original es menta: se lleva hacia crema y salvia */
+  .fondo-img {
+    filter: sepia(0.45) saturate(0.75) hue-rotate(-15deg) brightness(1.03);
   }
 
   .fondo-img,

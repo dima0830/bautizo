@@ -1,10 +1,10 @@
 <template>
   <!--
-    GALERÍA "VENTANITAS DEL BARCO": la sección se queda fija y, al bajar, las
-    fotos pasan de lado dentro de ventanas redondas de barco. Al tocar una,
-    se ve completa. Solo aparece si hay fotos (santiago1.webp, …).
+    GALERÍA "VENTANITAS": mientras la sección pasa por la pantalla, las
+    fotos se deslizan de lado dentro de ventanas redondas. Al tocar una, se
+    ve completa. Solo aparece si hay fotos (santiago1.webp, …).
   -->
-  <section v-if="fotos.length" id="galeria" ref="pistaRef" class="galeria" :style="{ '--n': fotos.length }">
+  <section v-if="fotos.length" id="galeria" ref="seccionRef" class="seccion galeria manchas">
     <div class="escena">
       <div v-flotar class="cabecera">
         <p class="antetitulo">Un regalo de Dios</p>
@@ -46,57 +46,67 @@
 import { onBeforeUnmount, onMounted, ref } from "vue";
 import { datos } from "@/datos";
 import { fotosGaleria } from "@/imagenes";
-import { usarProgresoPista } from "@/progresoPista";
-
 const fotos = fotosGaleria;
-const pistaRef = ref<HTMLElement | null>(null);
+const seccionRef = ref<HTMLElement | null>(null);
 const filaRef = ref<HTMLElement | null>(null);
 const abierta = ref<number | null>(null);
 
-/* la fila se desliza hacia la izquierda lo que sobra de ancho */
-let ultimoP = 0;
-function mover(p: number) {
-  ultimoP = p;
+/*
+  La fila se desliza hacia la izquierda lo que sobra de ancho según cuánto ha
+  pasado la sección por la pantalla: empieza con la primera foto al centro
+  cuando la sección asoma abajo y termina con la última al centro cuando se
+  va por arriba.
+*/
+let pendiente = false;
+function mover() {
+  pendiente = false;
+  const seccion = seccionRef.value;
   const fila = filaRef.value;
-  if (!fila) return;
+  if (!seccion || !fila) return;
+  const r = seccion.getBoundingClientRect();
+  const alto = window.innerHeight;
+  const recorrido = (alto * 0.85 - r.top) / (r.height + alto * 0.5);
+  const p = Math.min(1, Math.max(0, recorrido));
   const sobra = Math.max(0, fila.scrollWidth - (fila.parentElement?.clientWidth ?? 0));
-  fila.style.transform = `translate3d(${-p * sobra}px, 0, 0)`;
+  fila.style.transform = `translate3d(${(-p * sobra).toFixed(1)}px, 0, 0)`;
 }
-usarProgresoPista(pistaRef, mover);
+
+function programar() {
+  if (!pendiente) {
+    pendiente = true;
+    requestAnimationFrame(mover);
+  }
+}
 
 function alTeclado(e: KeyboardEvent) {
   if (e.key === "Escape") abierta.value = null;
 }
-const alRedimensionar = () => mover(ultimoP);
+
 onMounted(() => {
   window.addEventListener("keydown", alTeclado);
-  window.addEventListener("resize", alRedimensionar);
+  window.addEventListener("resize", programar);
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  window.addEventListener("scroll", programar, { passive: true });
+  mover();
 });
 onBeforeUnmount(() => {
   window.removeEventListener("keydown", alTeclado);
-  window.removeEventListener("resize", alRedimensionar);
+  window.removeEventListener("resize", programar);
+  window.removeEventListener("scroll", programar);
 });
 </script>
 
 <style scoped>
-/* PISTA: 100svh de escena + 45svh de recorrido por foto */
+/* sin fijar: la sección mide lo que su contenido (sin el padding lateral, la fila usa todo el ancho) */
 .galeria {
-  position: relative;
-  height: calc(100vh + var(--n) * 45vh);
-  height: calc(100svh + var(--n) * 45svh);
-  background: linear-gradient(180deg, var(--blanco), var(--cielo) 50%, var(--menta-claro));
+  --manchas:
+    radial-gradient(ellipse 80% 30% at 30% 48%, rgba(244, 238, 225, 0.9), transparent 70%),
+    radial-gradient(ellipse 60% 26% at 82% 58%, rgba(214, 223, 199, 0.45), transparent 70%);
+  padding-left: 0;
+  padding-right: 0;
 }
 
 .escena {
-  position: sticky;
-  top: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  height: 100vh;
-  height: 100svh;
-  overflow: hidden;
-  padding: 40px 0;
   text-align: center;
 }
 
@@ -114,14 +124,14 @@ onBeforeUnmount(() => {
   display: flex;
   gap: 26px;
   width: max-content;
-  padding: 0 calc(50% - 115px);
-  padding: 0 max(24px, calc(50vw - 115px));
+  padding: 0 calc(50% - 130px);
+  padding: 0 max(24px, calc(50vw - 130px));
   will-change: transform;
 }
 
 @media (min-width: 560px) {
   .fila {
-    padding: 0 125px;
+    padding: 0 110px;
   }
 }
 
@@ -129,8 +139,8 @@ onBeforeUnmount(() => {
 .ventanita {
   position: relative;
   flex: none;
-  width: 230px;
-  height: 230px;
+  width: 260px;
+  height: 260px;
   padding: 12px;
   border: 0;
   border-radius: 50%;
@@ -138,7 +148,7 @@ onBeforeUnmount(() => {
     radial-gradient(circle, transparent 62%, rgba(255, 255, 255, 0.35) 63% 66%, transparent 67%),
     conic-gradient(from 20deg, var(--agua), var(--menta), var(--agua-oscuro), var(--agua));
   box-shadow:
-    0 18px 30px -18px rgba(34, 80, 63, 0.7),
+    0 18px 30px -18px rgba(64, 74, 52, 0.7),
     inset 0 0 0 2px rgba(255, 255, 255, 0.5);
   cursor: pointer;
   animation: mecer-ventana 4s ease-in-out infinite alternate;
@@ -183,9 +193,10 @@ onBeforeUnmount(() => {
 
 .ayuda {
   margin: 4px 0 0;
-  font-family: var(--fuente-mano);
-  font-size: 1.3rem;
-  color: var(--agua-oscuro);
+  font-family: var(--fuente-texto);
+  font-size: 0.9rem;
+  font-style: italic;
+  color: var(--texto-suave);
 }
 
 /* VISOR */
@@ -196,7 +207,7 @@ onBeforeUnmount(() => {
   display: grid;
   place-items: center;
   padding: 24px;
-  background: rgba(34, 80, 63, 0.82);
+  background: rgba(64, 74, 52, 0.82);
 }
 
 .visor img {
@@ -237,13 +248,6 @@ onBeforeUnmount(() => {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .galeria {
-    height: auto;
-  }
-  .escena {
-    position: relative;
-    height: auto;
-  }
   .ventana-pista {
     overflow-x: auto;
   }

@@ -34,7 +34,7 @@ withDefaults(defineProps<{ mirando?: "derecha" | "izquierda" }>(), { mirando: "d
   width: 90%;
   height: 22%;
   margin-left: -45%;
-  border: 2px solid rgba(124, 194, 176, 0.9);
+  border: 2px solid rgba(159, 176, 141, 0.9);
   border-radius: 50%;
   opacity: 0;
   animation: onda 2.7s ease-out infinite;

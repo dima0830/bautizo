@@ -98,7 +98,7 @@ onBeforeUnmount(dejarDeEsperar);
   color: var(--verde);
   box-shadow:
     0 0 0 2px var(--menta),
-    0 10px 20px -10px rgba(34, 80, 63, 0.6);
+    0 10px 20px -10px rgba(64, 74, 52, 0.6);
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
 }
