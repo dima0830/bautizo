@@ -13,7 +13,7 @@
       <h2 class="te-esperamos">¡Te esperamos!</h2>
       <div class="protagonista">
         <img v-if="santiagoFinal" :src="santiagoFinal" :alt="`${datos.nombre} saludando`" loading="lazy" />
-        <Dibujo v-else nombre="concha" class="concha" />
+        <Ilustracion v-else nombre="concha" class="concha" />
       </div>
       <p class="firma">{{ datos.nombreCompleto }}</p>
       <p class="fecha">{{ fechaPartes.dia }} · {{ fechaPartes.mes }} · {{ fechaPartes.anio }}</p>
@@ -41,7 +41,6 @@
 import { datos, fechaPartes } from "@/datos";
 import { imagen } from "@/imagenes";
 import Ilustracion from "@/components/Ilustracion.vue";
-import Dibujo from "@/components/Dibujo.vue";
 
 const santiagoFinal = imagen("santiago-final");
 const guirnalda = imagen("guirnalda-olas");
