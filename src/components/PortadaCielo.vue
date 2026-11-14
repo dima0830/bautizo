@@ -1,8 +1,9 @@
 <template>
   <!--
-    PORTADA "DEL CIELO AL AGUA": la escena se queda fija mientras bajas.
-    --p (0 → 1) es el recorrido: el cielo se vuelve agua, las nubes suben a
-    distinto ritmo, suben las olas y entra el barquito navegando.
+    PORTADA "EN EL CIELO": la escena se queda fija mientras bajas.
+    --p (0 → 1) es el recorrido: las nubes suben a distinto ritmo, se
+    enciende una luz suave desde arriba y Santiago queda flotando en su
+    nube sobre un banco de nubes que sube.
   -->
   <div ref="pistaRef" class="pista">
     <section id="inicio" class="escena" aria-label="Portada">
@@ -18,8 +19,8 @@
         </svg>
       </div>
 
-      <!-- el agua va tiñendo la escena al bajar -->
-      <div class="tinte-agua" aria-hidden="true"></div>
+      <!-- luz suave que baja del cielo al avanzar (bendición) -->
+      <div class="luz" aria-hidden="true"></div>
 
       <!-- nubes en tres capas: las cercanas suben más rápido -->
       <div class="capa-nube lejos" aria-hidden="true"><div class="deriva"><Ilustracion nombre="nube-2" /></div></div>
@@ -51,24 +52,14 @@
         </div>
       </div>
 
-      <!-- olas que suben -->
-      <div class="olas" aria-hidden="true">
-        <img v-if="agua" :src="agua" alt="" class="agua-img" />
-        <svg v-else class="olas-svg" viewBox="0 0 800 300" preserveAspectRatio="none">
-          <g filter="url(#acuarela)">
-            <path class="ola o1" d="M0 70C80 40 140 40 220 66s150 30 230 0 160-34 350 4V300H0z" fill="#bfe3d0" />
-            <path class="ola o2" d="M0 120c90-30 160-26 250 4s170 26 250-4 170-30 300 6V300H0z" fill="#7cc2b0" />
-            <path class="ola o3" d="M0 180c100-26 180-20 260 6s160 22 260-6 180-24 280 4V300H0z" fill="#4f9e8b" opacity=".85" />
-          </g>
-        </svg>
+      <!-- banco de nubes abajo, sube un poco al bajar -->
+      <div class="banco" aria-hidden="true">
+        <div class="nube-banco b1"><div class="deriva lenta"><Ilustracion nombre="nube-1" :perezosa="false" /></div></div>
+        <div class="nube-banco b2"><div class="deriva"><Ilustracion nombre="nube-2" :perezosa="false" /></div></div>
+        <div class="nube-banco b3"><div class="deriva lenta"><Ilustracion nombre="nube-1" :perezosa="false" /></div></div>
       </div>
 
-      <!-- el barquito entra navegando -->
-      <div class="barco" aria-hidden="true">
-        <BarquitoNavegando />
-      </div>
-
-      <p class="zarpamos">¡Zarpamos hacia mi gran día!</p>
+      <p class="frase-final">¡Ya se acerca mi gran día!</p>
 
       <a href="#fecha" class="desliza" aria-label="Desliza hacia abajo">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -86,53 +77,23 @@ import { imagen } from "@/imagenes";
 import { usarProgresoPista } from "@/progresoPista";
 import Ilustracion from "@/components/Ilustracion.vue";
 import Dibujo from "@/components/Dibujo.vue";
-import BarquitoNavegando from "@/components/BarquitoNavegando.vue";
 
 const cielo = imagen("cielo");
-const agua = imagen("agua");
 const santiago = imagen("santiago-portada");
 const letras = [..."¡Me bautizo!"];
 
 const pistaRef = ref<HTMLElement | null>(null);
-/*
-  El barco no va pegado al dedo: --pb sigue a --p con inercia (tarda ~1 s en
-  alcanzarlo), así entra navegando suave aunque se baje rápido.
-*/
-let objetivoBarco = 0;
-let barco = 0;
-let anterior = 0;
-let animando = false;
-const INERCIA = 1.0; // segundos aprox. para alcanzar su sitio
-
-function pasoBarco(ahora: number) {
-  const dt = Math.min(0.1, Math.max(0, (ahora - anterior) / 1000));
-  anterior = ahora;
-  barco += (objetivoBarco - barco) * (1 - Math.exp(-dt / (INERCIA / 3)));
-  if (Math.abs(objetivoBarco - barco) < 0.0005) barco = objetivoBarco;
-  pistaRef.value?.style.setProperty("--pb", barco.toFixed(4));
-  if (barco !== objetivoBarco) requestAnimationFrame(pasoBarco);
-  else animando = false;
-}
-
-usarProgresoPista(pistaRef, (p) => {
-  objetivoBarco = p;
-  if (!animando) {
-    animando = true;
-    anterior = performance.now();
-    requestAnimationFrame(pasoBarco);
-  }
-});
+usarProgresoPista(pistaRef);
 </script>
 
 <style scoped>
-/* PISTA: 100svh de escena + 200svh de recorrido */
+/* PISTA: 100svh de escena + 150svh de recorrido */
 .pista {
   --p: 0;
   --pe: 0;
-  --pb: 0;
   position: relative;
-  height: 300vh;
-  height: 300svh;
+  height: 250vh;
+  height: 250svh;
 }
 
 .escena {
@@ -160,11 +121,14 @@ usarProgresoPista(pistaRef, (p) => {
   transform: translateY(calc(var(--p) * -8%)) scale(1.08);
 }
 
-.tinte-agua {
+/* luz cálida que baja desde arriba */
+.luz {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(191, 227, 208, 0.2) 0%, rgba(124, 194, 176, 0.75) 100%);
-  opacity: calc(clamp(0, (var(--p) - 0.25) / 0.6, 1));
+  z-index: 1;
+  background: radial-gradient(ellipse 80% 55% at 50% -5%, rgba(255, 246, 214, 0.95), rgba(255, 246, 214, 0) 70%);
+  opacity: calc(clamp(0, (var(--p) - 0.2) / 0.5, 1));
+  pointer-events: none;
 }
 
 /* NUBES: cada capa sube a su ritmo y se desvanece al final */
@@ -343,16 +307,16 @@ usarProgresoPista(pistaRef, (p) => {
   animation: aparecer 0.8s ease 1.6s both;
 }
 
-/* SANTIAGO: abajo al centro; al bajar sube hacia el cielo y se desvanece mientras entra el barquito */
+/* SANTIAGO: abajo al centro; al bajar sube un poco en su nube y se queda flotando sobre el banco de nubes */
 .protagonista {
   position: absolute;
   left: 50%;
   bottom: 14%;
-  z-index: 2;
+  /* encima del banco de nubes */
+  z-index: 5;
   width: min(74%, 330px);
-  transform: translateX(-50%) translateY(calc(var(--pe) * -42vh)) scale(calc(1 - var(--pe) * 0.25));
+  transform: translateX(-50%) translateY(calc(var(--pe) * -6vh)) scale(calc(1 - var(--pe) * 0.06));
   transform-origin: 50% 100%;
-  opacity: calc(1 - clamp(0, (var(--p) - 0.3) / 0.3, 1));
 }
 
 /* entrada y flotación en elementos distintos (las dos animan transform) */
@@ -382,58 +346,40 @@ usarProgresoPista(pistaRef, (p) => {
   }
 }
 
-/* OLAS: al principio asoman, al bajar suben hasta la mitad de la pantalla */
-.olas {
+/* BANCO DE NUBES: asoma abajo y sube un poco al bajar */
+.banco {
   position: absolute;
-  left: -6%;
-  right: -6%;
-  bottom: 0;
+  left: -12%;
+  right: -12%;
+  bottom: -6%;
   z-index: 4;
-  height: 46%;
-  transform: translateY(calc(42% - var(--pe) * 42%));
+  height: 42%;
+  transform: translateY(calc(25% - var(--pe) * 25%));
+  pointer-events: none;
 }
 
-.agua-img,
-.olas-svg {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: 50% 0;
-}
-
-.ola {
-  animation: oleaje 6s ease-in-out infinite alternate;
-}
-
-.o2 {
-  animation-duration: 7.5s;
-  animation-direction: alternate-reverse;
-}
-
-.o3 {
-  animation-duration: 9s;
-}
-
-@keyframes oleaje {
-  to {
-    transform: translateX(-30px);
-  }
-}
-
-/* BARQUITO: entra desde la izquierda y se detiene al centro sobre las olas */
-.barco {
+.nube-banco {
   position: absolute;
-  left: 50%;
-  bottom: 36%;
-  z-index: 5;
-  width: min(40%, 170px);
-  /* entra con --pb (con inercia) a lo largo de casi todo el recorrido */
-  transform: translateX(calc(-50% - (1 - clamp(0, (var(--pb) - 0.1) / 0.75, 1)) * min(80vw, 400px)));
-  opacity: calc(clamp(0, (var(--pb) - 0.1) / 0.1, 1));
+  bottom: 0;
 }
 
-.zarpamos {
+.b1 {
+  left: -6%;
+  width: 70%;
+}
+
+.b2 {
+  left: 18%;
+  bottom: 22%;
+  width: 66%;
+}
+
+.b3 {
+  right: -8%;
+  width: 72%;
+}
+
+.frase-final {
   position: absolute;
   left: 0;
   right: 0;
@@ -486,10 +432,6 @@ usarProgresoPista(pistaRef, (p) => {
   }
   .escena {
     position: relative;
-  }
-  .barco {
-    opacity: 1;
-    transform: translateX(-50%);
   }
 }
 </style>
