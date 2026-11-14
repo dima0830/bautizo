@@ -26,6 +26,9 @@
       <div class="capa-nube media" aria-hidden="true"><div class="deriva lenta"><Ilustracion nombre="nube-1" /></div></div>
       <div class="capa-nube cerca" aria-hidden="true"><div class="deriva"><Ilustracion nombre="nube-1" /></div></div>
 
+      <!-- la paloma cruza el cielo despacio, detrás de los textos -->
+      <div class="paloma-vuelo" aria-hidden="true"><div class="aleteo"><Ilustracion nombre="paloma" :perezosa="false" /></div></div>
+
       <!-- textos -->
       <div class="textos">
         <p class="me-bautizo" aria-label="¡Me bautizo!">
@@ -62,7 +65,7 @@
 
       <!-- el barquito entra navegando -->
       <div class="barco" aria-hidden="true">
-        <div class="mece"><Ilustracion nombre="barquito" /></div>
+        <BarquitoNavegando />
       </div>
 
       <p class="zarpamos">¡Zarpamos hacia mi gran día!</p>
@@ -83,6 +86,7 @@ import { imagen } from "@/imagenes";
 import { usarProgresoPista } from "@/progresoPista";
 import Ilustracion from "@/components/Ilustracion.vue";
 import Dibujo from "@/components/Dibujo.vue";
+import BarquitoNavegando from "@/components/BarquitoNavegando.vue";
 
 const cielo = imagen("cielo");
 const agua = imagen("agua");
@@ -136,23 +140,24 @@ usarProgresoPista(pistaRef);
 }
 
 /* NUBES: cada capa sube a su ritmo y se desvanece al final */
+/* cada capa se desvanece justo antes de tocar el borde de arriba (no se corta de golpe) */
 .capa-nube {
   position: absolute;
-  opacity: calc(1 - clamp(0, (var(--p) - 0.45) / 0.35, 1));
 }
 
 .capa-nube.lejos {
   top: 6%;
   right: -14%;
   width: 52%;
-  opacity: calc(0.7 * (1 - clamp(0, (var(--p) - 0.45) / 0.35, 1)));
-  transform: translateY(calc(var(--p) * -40vh));
+  opacity: calc(0.7 * (1 - clamp(0, (var(--p) - 0.2) / 0.3, 1)));
+  transform: translateY(calc(var(--p) * -12vh));
 }
 
 .capa-nube.media {
   top: 30%;
   left: -16%;
   width: 58%;
+  opacity: calc(1 - clamp(0, (var(--p) - 0.14) / 0.26, 1));
   transform: translateY(calc(var(--p) * -70vh));
 }
 
@@ -160,6 +165,7 @@ usarProgresoPista(pistaRef);
   top: 50%;
   right: -22%;
   width: 70%;
+  opacity: calc(1 - clamp(0, (var(--p) - 0.18) / 0.25, 1));
   transform: translateY(calc(var(--p) * -110vh));
 }
 
@@ -176,6 +182,46 @@ usarProgresoPista(pistaRef);
 @keyframes deriva {
   to {
     transform: translateX(8%);
+  }
+}
+
+/* PALOMA: cruza el cielo de un lado a otro (en un elemento) y ondula (en otro) */
+.paloma-vuelo {
+  position: absolute;
+  top: 1.5%;
+  left: 0;
+  z-index: 2;
+  width: 18%;
+  max-width: 90px;
+  animation: cruzar 16s linear 2.4s infinite;
+  opacity: 0;
+}
+
+.aleteo {
+  animation: ondular 2.2s ease-in-out infinite alternate;
+}
+
+@keyframes cruzar {
+  0% {
+    opacity: 0;
+    transform: translateX(-30vw);
+  }
+  8% {
+    opacity: 1;
+  }
+  70% {
+    opacity: 1;
+  }
+  80%,
+  100% {
+    opacity: 0;
+    transform: translateX(min(110vw, 520px));
+  }
+}
+
+@keyframes ondular {
+  to {
+    transform: translateY(-14px) rotate(-5deg);
   }
 }
 
@@ -354,22 +400,8 @@ usarProgresoPista(pistaRef);
   bottom: 36%;
   z-index: 5;
   width: min(40%, 170px);
-  transform: translateX(calc(-50% - (1 - clamp(0, (var(--p) - 0.15) / 0.5, 1)) * 85vw));
+  transform: translateX(calc(-50% - (1 - clamp(0, (var(--p) - 0.12) / 0.66, 1)) * 85vw));
   opacity: calc(clamp(0, (var(--p) - 0.13) / 0.08, 1));
-}
-
-.barco .mece {
-  animation: mecer 3.2s ease-in-out infinite alternate;
-  transform-origin: 50% 90%;
-}
-
-@keyframes mecer {
-  from {
-    transform: rotate(-5deg) translateY(0);
-  }
-  to {
-    transform: rotate(5deg) translateY(-8px);
-  }
 }
 
 .zarpamos {

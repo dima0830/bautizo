@@ -105,6 +105,24 @@ const DIBUJOS: Record<string, { caja: string; color: string; tinta: string }> = 
       <path d="M58 59c0 10-4 18 0 28M142 54c0 10 4 20 0 30M160 72c0 8-2 14 0 20" stroke-width="1"/>
       <path d="M68 78h64" stroke-dasharray="2 6" stroke-width="2.4" stroke="#f3e3c3"/>`,
   },
+  cruz: {
+    caja: "0 0 200 200",
+    color: `
+      <circle cx="100" cy="92" r="70" fill="#e3f3ea" opacity=".8"/>
+      <path d="M90 30h20v40h34v20h-34v74H90V90H56V70h34z" fill="#7cc2b0"/>
+      <path d="M93 34h6v38h-6zM60 74h28v5H60z" fill="#ffffff" opacity=".7"/>
+      <ellipse cx="62" cy="150" rx="13" ry="7" fill="#7cc2b0" transform="rotate(-35 62 150)"/>
+      <ellipse cx="48" cy="134" rx="12" ry="6" fill="#bfe3d0" transform="rotate(-60 48 134)"/>
+      <ellipse cx="76" cy="166" rx="12" ry="6" fill="#4f9e8b" transform="rotate(-15 76 166)"/>
+      <ellipse cx="138" cy="150" rx="13" ry="7" fill="#7cc2b0" transform="rotate(35 138 150)"/>
+      <ellipse cx="152" cy="134" rx="12" ry="6" fill="#bfe3d0" transform="rotate(60 152 134)"/>
+      <ellipse cx="124" cy="166" rx="12" ry="6" fill="#4f9e8b" transform="rotate(15 124 166)"/>
+      <path d="M100 176c-4 6-5 9-5 11a5 5 0 0 0 10 0c0-2-1-5-5-11z" fill="#7cc2b0"/>`,
+    tinta: `
+      <path d="M90 30h20v40h34v20h-34v74H90V90H56V70h34z"/>
+      <path d="M44 128c8 18 26 36 50 42M156 128c-8 18-26 36-50 42"/>
+      <path d="M100 18v-6M84 22l-4-4M116 22l4-4" stroke-width="1.2"/>`,
+  },
   "esquina-eucalipto": {
     caja: "0 0 200 200",
     color: `

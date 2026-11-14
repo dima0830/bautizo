@@ -22,6 +22,7 @@
     <SeccionFecha />
     <RutaBarquito />
     <FamiliaNubes />
+    <VersiculoPaloma />
     <GaleriaVentanas />
     <ConfirmacionAsistencia />
     <CierreBurbujas />
@@ -37,6 +38,7 @@ import PortadaCielo from "@/components/PortadaCielo.vue";
 import SeccionFecha from "@/components/SeccionFecha.vue";
 import RutaBarquito from "@/components/RutaBarquito.vue";
 import FamiliaNubes from "@/components/FamiliaNubes.vue";
+import VersiculoPaloma from "@/components/VersiculoPaloma.vue";
 import GaleriaVentanas from "@/components/GaleriaVentanas.vue";
 import ConfirmacionAsistencia from "@/components/ConfirmacionAsistencia.vue";
 import CierreBurbujas from "@/components/CierreBurbujas.vue";

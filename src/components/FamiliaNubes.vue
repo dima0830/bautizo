@@ -6,6 +6,7 @@
   -->
   <section id="familia" class="seccion familia">
     <div v-flotar class="cabecera">
+      <AdornoCruz />
       <p class="antetitulo">Con el amor de</p>
       <h2 class="titulo">Mi familia</h2>
     </div>
@@ -38,6 +39,7 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, reactive, ref } from "vue";
 import { datos } from "@/datos";
+import AdornoCruz from "@/components/AdornoCruz.vue";
 
 const grupos = [
   {
@@ -102,7 +104,7 @@ onBeforeUnmount(() => {
   position: relative;
   display: block;
   width: 100%;
-  height: 168px;
+  height: 184px;
   padding: 0;
   border: 0;
   background: none;
@@ -133,12 +135,12 @@ onBeforeUnmount(() => {
   align-items: center;
   justify-content: center;
   gap: 2px;
-  padding: 26px 30px 18px;
-  /* forma de nube: varios círculos en el fondo + base redondeada */
+  padding: 40px 30px 16px;
+  /* forma de nube: tres círculos de tamaño fijo arriba (todos dentro de la tarjeta) + base redondeada */
   background:
-    radial-gradient(circle at 26% 38%, var(--fondo-nube) 0 22%, transparent 22.5%),
-    radial-gradient(circle at 50% 26%, var(--fondo-nube) 0 26%, transparent 26.5%),
-    radial-gradient(circle at 74% 38%, var(--fondo-nube) 0 21%, transparent 21.5%);
+    radial-gradient(circle 42px at 27% 76px, var(--fondo-nube) 98%, transparent 100%),
+    radial-gradient(circle 56px at 51% 62px, var(--fondo-nube) 98%, transparent 100%),
+    radial-gradient(circle 40px at 75% 80px, var(--fondo-nube) 98%, transparent 100%);
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
   /* el fondo (::before) queda dentro de la cara y se oculta con ella al girar */
@@ -150,7 +152,7 @@ onBeforeUnmount(() => {
 .cara::before {
   content: "";
   position: absolute;
-  inset: 34% 4% 0;
+  inset: 42% 4% 0;
   z-index: -1;
   border-radius: 999px;
   background: var(--fondo-nube);

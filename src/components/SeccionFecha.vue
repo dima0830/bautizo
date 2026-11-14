@@ -9,6 +9,7 @@
     </svg>
 
     <div v-flotar class="contenido">
+      <AdornoCruz />
       <p class="antetitulo">Acompáñame el</p>
       <p class="dia-semana">{{ fechaPartes.diaSemana }}</p>
       <div class="dia" v-paralaje>
@@ -37,6 +38,7 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import { datos, fechaPartes } from "@/datos";
+import AdornoCruz from "@/components/AdornoCruz.vue";
 
 const objetivo = new Date(datos.fecha).getTime();
 const ahora = ref(Date.now());

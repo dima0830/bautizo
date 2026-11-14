@@ -9,6 +9,7 @@
     <div class="esquina derecha" aria-hidden="true"><Ilustracion nombre="esquina-eucalipto" /></div>
 
     <div v-flotar class="contenido">
+      <AdornoCruz />
       <p class="bendicion">Con la bendición de Dios y el amor de mi familia</p>
       <h2 class="te-esperamos">¡Te esperamos!</h2>
       <div class="protagonista">
@@ -41,6 +42,7 @@
 import { datos, fechaPartes } from "@/datos";
 import { imagen } from "@/imagenes";
 import Ilustracion from "@/components/Ilustracion.vue";
+import AdornoCruz from "@/components/AdornoCruz.vue";
 
 const santiagoFinal = imagen("santiago-final");
 const guirnalda = imagen("guirnalda-olas");
